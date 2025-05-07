@@ -1,0 +1,24 @@
+trigger:
+  - master 
+
+pool:
+  vmImage: 'ubuntu-latest'  # Use Microsoft-hosted agent
+
+steps:
+  - task: UsePythonVersion@0   
+    inputs:
+      versionSpec: '3.x'
+      addToPath: true
+
+  - script: |
+      python -m venv venv
+      source venv/bin/activate
+      pip install -r requirements.txt
+      python main.py   # Or your actual entry point
+    displayName: 'Install dependencies and run app'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(System.DefaultWorkingDirectory)'
+      ArtifactName: 'drop'
+      publishLocation: 'Container'
